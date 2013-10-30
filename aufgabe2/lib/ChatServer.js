@@ -1,4 +1,4 @@
-ChatServer(userStore, messageStore) = function extends EventEmitter()
+function ChatServer(userStore, messageStore)
 {
 
     this.userStore = userStore;
@@ -6,49 +6,63 @@ ChatServer(userStore, messageStore) = function extends EventEmitter()
 }
 
 var EventEmitter = require("events").EventEmitter;
+ChatServer.prototype = Object.create (EventEmitter.prototype);
 
 ChatServer.prototype.addUser = function (newUser)
 {
-    ChatServer.userStore.add(newUser);
+    this.userStore.add(newUser);
+    this.emit("user added", {
+            user: newUser
+    }
+    )
+
 }
 
-ChatServer.prototype.removeUserById = function (rmUser)
+ChatServer.prototype.removeUserById = function (UserID)
 {
-    if (ChatServer.userStore.findById(rmUser) === null)
+    var user = this.userStore.findById(UserID);
+    if (user === null)
     {
-        console.log('unknown User')
+        throw new Error("Unknown user")
     }
     else
     {
-        ChatServer.userStore.removeById(rmUser);
-        this.emit(rmUser);
+        this.userStore.removeById(UserID);
+        this.emit("user removed", {
+            user : user
+        })
     }
 
 }
 
 ChatServer.prototype.sendMessage = function (userId, text)
 {
-    if (ChatServer.userStore.findById(userId) === null)
+    var user = this.userStore.findById(userId);
+    if (user === null)
     {
-        console.log('unknown User')
+        throw new Error("Unknown user")
     }
     else
     {
         var message =
         {
             id : Date.now(),
-            SenderId : userId,
+            senderId : userId,
             text: text
         };
 
-        ChatServer.messageStore.add(message);
-        this.emit(userId, text);
+        this.messageStore.add(message);
+        this.emit("new message", {
+            sender: user,
+            message: message
+
+        });
     }
 
 }
 ChatServer.prototype.getAllMessages = function ()
 {
-    exports.getAllMessages = ChatServer.messageStore.findAll();
+    return this.messageStore.findAll();
 }
 
 module.exports = ChatServer;
