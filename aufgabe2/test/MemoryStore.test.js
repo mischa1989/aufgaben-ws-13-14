@@ -5,6 +5,7 @@ var chai = require("chai"),
 
 describe("MemoryStore()", function () {
     var MemoryStore;
+    //MemoryStore.prototype.add(String);
 
     before(function () {
         MemoryStore = require("../lib/MemoryStore.js");
@@ -91,3 +92,4 @@ describe("MemoryStore()", function () {
     });
 
 });
+
