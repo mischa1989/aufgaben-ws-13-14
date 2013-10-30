@@ -12,6 +12,19 @@ Der `MemoryStore` implementiert ein fiktives Datenbank-Interface zum Speichern u
 
 Die genaue Spezifikation findet ihr im Test `aufgabe2/test/MemoryStore.test.js`. Hier die Anforderung jedoch zusätzlich in Prosa.
 
+
+Die Tests erwarten, dass beide Klassen in `aufgabe2/lib` liegen. Legt also z.B. für den MemoryStore die Datei `aufgabe2/lib/MemoryStore.js` an und schreibt in diese Datei:
+
+```javascript
+function MemoryStore() {}
+
+// Hier kommt eure Implementierung
+
+module.exports = MemoryStore;
+```
+
+`module.exports` exportiert den MemoryStore, so dass der Test darauf zugreifen kann.
+
 #### MemoryStore()
 
 Der `MemoryStore` ist eine `function`
@@ -100,7 +113,13 @@ Der `ChatServer` wird mit zwei `Store`-Implementierungen instanziiert, dem `user
 
 #### ChatServer.prototype: Object
 
-Der `ChatServer.prototype` soll von [`EventEmitter.prototype`](http://nodejs.org/api/events.html#events_class_events_eventemitter) aberben und außerdem folgende Eigenschaften besitzen.
+Der `ChatServer.prototype` soll von [`EventEmitter.prototype`](http://nodejs.org/api/events.html#events_class_events_eventemitter) aberben. Damit ihr den [EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter) in eurem Modul verwenden könnt, müsst ihr ihn vorher importieren:
+
+```javascript
+var EventEmitter = require("events").EventEmitter;
+```
+
+Des Weiteren besitzt der `ChatServer` folgende Eigenschaften.
 
 #### ChatServer.prototype.addUser(user: Item): *
 

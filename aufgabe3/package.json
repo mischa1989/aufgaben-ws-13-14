@@ -1,5 +1,5 @@
 {
-    "name":    "aufgabe2",
+    "name":    "aufgabe3",
     "version": "0.0.1",
     "scripts": {
         "test": "node node_modules/mocha/bin/mocha -R spec"
