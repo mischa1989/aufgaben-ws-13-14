@@ -19,8 +19,8 @@ ChatServer.prototype.addUser = function (newUser, callback)
 }
 
 ChatServer.prototype.removeUserById = function (UserID, callback)
-{
-    this.userStore.findById(UserID, function (callback, user)
+{ var that = this;
+    this.userStore.findById(UserID, function (err, user)
     {
         if (user === null)
         {
@@ -28,55 +28,59 @@ ChatServer.prototype.removeUserById = function (UserID, callback)
         }
         else
         {
-            this.userStore.removeById(user, callback); this.emit("user removed",
-            {
-                user : user
-            })
+            that.userStore.removeById(UserID, function (err){
+                if (err)
+                {
+                 callback(err);
+                }
+                else
+                {
+                    that.emit("user removed",
+                    {
+                        user : user
+                    })
+                    callback(null);
+                }
+            });
+
         }
-        setImmediate(function ()
-        {
-            callback(null, null);
-        }); });
+});
 }
 
 ChatServer.prototype.sendMessage = function (userId, text, callback)
-{
-    var user = this.userStore.findById(userId, callback);
-    if (user === null)
-    {
-        //throw new Error("Unknown user")
-        callback(new Error("Unknown user"));
-    }
-    else
-    {
-        var message =
+{var that = this;
+ this.userStore.findById(userId, function(err, user){
+        if (user === null)
         {
-            id : Date.now(),
-            senderId : userId,
-            text: text
-        };
-
-        this.messageStore.add(message, callback);
-        this.emit("new message", {
-            sender: user,
-            message: message
-
-        })
-    }
-        setImmediate(function ()
-        {
-            callback(null, message);
+            //throw new Error("Unknown user")
+            callback(new Error("Unknown user"));
         }
-        );
+        else
+        {
+            var message =
+            {
+                id : Date.now(),
+                senderId : userId,
+                text: text
+            };
+
+            that.messageStore.add(message, function (err){
+                that.emit("new message", {
+                    sender: user,
+                    message: message
+
+                })
+                callback(null, message);
+            });
+
+        }
+    });
+
 
 }
 ChatServer.prototype.getAllMessages = function (callback)
 {
-    setImmediate(function ()
-    {
-        callback (null, this.messageStore.findAll());
-    }
-    );
+    this.messageStore.findAll(callback);
 }
 
 module.exports = ChatServer;
