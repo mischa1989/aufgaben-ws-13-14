@@ -1,0 +1,9 @@
+{
+    "name":    "application-name",
+    "version": "0.0.1",
+    "dependencies": {
+        "socket.io": "0.x",
+        "connect": "2.x",
+        "Faker": "0.x"
+    }
+}
